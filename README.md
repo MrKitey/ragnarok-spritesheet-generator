@@ -37,7 +37,7 @@ Le scanner cherche les chemins coréens et ANSI, par ex. :
 - Headgears : `악세사리`
 - Palettes body / head
 
-Voir `folders.MD` pour le détail des dossiers et classes.
+Voir [folders.md](folders.md) pour le détail des dossiers et classes.
 
 ## Structure `src/`
 
