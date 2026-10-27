@@ -38,7 +38,7 @@ The scanner looks for Korean and ANSI paths, for example:
 - Body / head palettes
 
 See [folders.md](folders.md) for folder and class details.
-
+```text
 data/sprite/
 ├── 몬스터/          # Monster Sprites
 ├── 도람족/          # Doram (Wedding/Weapon, etc.)
@@ -58,7 +58,7 @@ data/sprite/
 │       └── 남/      # Male
 ├── 이팩트/          # Skill and Hat Effects
 └── npc/             # NPC Sprites
-
+```
 ## `src/` layout
 
 | Module | Role |
