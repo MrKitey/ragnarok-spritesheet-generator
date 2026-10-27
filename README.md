@@ -67,4 +67,4 @@ Cela évite des plantages Vulkan sur Intel UHD.
 
 ## Licence
 
-Projet privé. Aucune licence publique pour l’instant.
+Distribué sous [MIT](LICENSE).
