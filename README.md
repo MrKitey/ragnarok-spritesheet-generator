@@ -39,6 +39,26 @@ The scanner looks for Korean and ANSI paths, for example:
 
 See [folders.md](folders.md) for folder and class details.
 
+data/sprite/
+├── 몬스터/          # Monster Sprites
+├── 도람족/          # Doram (Wedding/Weapon, etc.)
+├── 로브/            # Robes / Custom Garments
+├── 아이템/          # Skill Icons + Item Drops
+├── 악세사리/        # Headgears
+│   ├── 여/          # Female
+│   └── 남/          # Male
+├── 방패/            # Shields (par classe)
+├── 인간족/          # Class Sprites
+│   ├── <Class>/     # Weapons / attack anims
+│   ├── 머리통/      # Head Sprites
+│   │   ├── 여/      # Female
+│   │   └── 남/      # Male
+│   └── 몸통/        # Body: <Class>_<Gender>.act/.spr
+│       ├── 여/      # Female
+│       └── 남/      # Male
+├── 이팩트/          # Skill and Hat Effects
+└── npc/             # NPC Sprites
+
 ## `src/` layout
 
 | Module | Role |
