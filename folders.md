@@ -9,7 +9,7 @@ data/sprite/
 ├── 악세사리/        # Headgears
 │   ├── 여/          # Female
 │   └── 남/          # Male
-├── 방패/            # Shields (par classe)
+├── 방패/            # Shields (per class)
 ├── 인간족/          # Class Sprites
 │   ├── <Class>/     # Weapons / attack anims
 │   ├── 머리통/      # Head Sprites
@@ -21,6 +21,20 @@ data/sprite/
 ├── 이팩트/          # Skill and Hat Effects
 └── npc/             # NPC Sprites
 ```
+
+## PALETTE FOLDERS
+
+```text
+data/palette/
+├── 몸/                         # Body palettes
+│   ├── <Class>_<Gender>_N.pal
+│   └── <costume>/              # optional costume packs
+│       └── <Class>_<Gender>_N.pal
+└── 머리/                       # Head palettes
+    └── 머리<Class>_<Gender>_N.pal
+```
+
+Gender tags in filenames: `남` (male), `여` (female).
 
 ## ANSI FOLDERS
 

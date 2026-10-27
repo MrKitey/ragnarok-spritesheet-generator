@@ -32,33 +32,14 @@ Side tabs: Folder, Body, Head, Weapons, Headgears, Body Pal, Head Pal, Sprite.
 
 The scanner looks for Korean and ANSI paths, for example:
 
-- Body: `인간족/몸통` or `ÀÎ°£Á·/¸öÅë`
-- Head: `인간족/머리통`
-- Headgears: `악세사리`
-- Body / head palettes
+- Body: `data/sprite/인간족/몸통`
+- Head: `data/sprite/인간족/머리통`
+- Headgears: `data/sprite/악세사리`
+- Body palettes: `data/palette/몸`
+- Head palettes: `data/palette/머리`
 
-See [folders.md](folders.md) for folder and class details.
-```text
-data/sprite/
-├── 몬스터/          # Monster Sprites
-├── 도람족/          # Doram (Wedding/Weapon, etc.)
-├── 로브/            # Robes / Custom Garments
-├── 아이템/          # Skill Icons + Item Drops
-├── 악세사리/        # Headgears
-│   ├── 여/          # Female
-│   └── 남/          # Male
-├── 방패/            # Shields (par classe)
-├── 인간족/          # Class Sprites
-│   ├── <Class>/     # Weapons / attack anims
-│   ├── 머리통/      # Head Sprites
-│   │   ├── 여/      # Female
-│   │   └── 남/      # Male
-│   └── 몸통/        # Body: <Class>_<Gender>.act/.spr
-│       ├── 여/      # Female
-│       └── 남/      # Male
-├── 이팩트/          # Skill and Hat Effects
-└── npc/             # NPC Sprites
-```
+See [folders.md](folders.md) for full trees, classes, and mounts.
+
 ## `src/` layout
 
 | Module | Role |
