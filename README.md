@@ -4,6 +4,9 @@ Desktop editor to compose and export Ragnarok Online spritesheets.
 
 Stack: Rust, eframe/egui, `.spr` / `.act` / `.pal` parsers.
 
+## Screenshots
+[![1](images/1-th.png)](images/1.png) [![2](images/2-th.png)](images/2.png) [![3](images/3-th.png)](images/3.png)
+
 ## Requirements
 
 - Recent Rust toolchain (edition 2024)
