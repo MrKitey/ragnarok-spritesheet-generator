@@ -11,7 +11,7 @@ permissions:
 env:
   CARGO_TERM_COLOR: always
   APPIMAGE_EXTRACT_AND_RUN: "1"
-  BIN_NAME: sprite-editor
+  BIN_NAME: ragnarok-spritesheet-generator
 
 jobs:
   linux:
@@ -55,8 +55,8 @@ jobs:
 
           printf '%s\n' \
             '[Desktop Entry]' \
-            'Name=Sprite Editor' \
-            'Comment=Ragnarok ACT/SPR spritesheet editor' \
+            'Name=Ragnarok Spritesheet Generator' \
+            'Comment=Ragnarok ACT/SPR spritesheet generator' \
             "Exec=${BIN_NAME}" \
             "Icon=${BIN_NAME}" \
             'Type=Application' \

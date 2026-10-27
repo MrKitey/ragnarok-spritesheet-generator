@@ -2650,6 +2650,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 
 [[package]]
+name = "ragnarok-spritesheet-generator"
+version = "0.1.0"
+dependencies = [
+ "byteorder",
+ "eframe",
+ "image",
+ "rand",
+ "rfd",
+ "tempfile",
+ "thiserror 2.0.21",
+ "wgpu",
+]
+
+[[package]]
 name = "rand"
 version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3070,20 +3084,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d9571ea910ebd84c86af4b3ed27f9dbdc6ad06f17c5f96146b2b671e2976744f"
 dependencies = [
  "bitflags 2.13.2",
-]
-
-[[package]]
-name = "sprite-editor"
-version = "0.1.0"
-dependencies = [
- "byteorder",
- "eframe",
- "image",
- "rand",
- "rfd",
- "tempfile",
- "thiserror 2.0.21",
- "wgpu",
 ]
 
 [[package]]

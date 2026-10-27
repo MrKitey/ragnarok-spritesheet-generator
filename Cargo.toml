@@ -1,5 +1,5 @@
 [package]
-name = "sprite-editor"
+name = "ragnarok-spritesheet-generator"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,7 +8,7 @@ name = "sprite_editor"
 path = "src/lib.rs"
 
 [[bin]]
-name = "sprite-editor"
+name = "ragnarok-spritesheet-generator"
 path = "src/main.rs"
 
 [dependencies]
