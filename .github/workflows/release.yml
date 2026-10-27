@@ -66,18 +66,18 @@ jobs:
 
           convert -size 256x256 xc:'#2c3340' "${APPDIR}/${BIN_NAME}.png"
 
-          wget -q -O linuxdeploy-x86_64.AppImage \
+          wget -q -O /tmp/linuxdeploy.AppImage \
             https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-          chmod +x linuxdeploy-x86_64.AppImage
+          chmod +x /tmp/linuxdeploy.AppImage
 
-          ./linuxdeploy-x86_64.AppImage \
+          /tmp/linuxdeploy.AppImage \
             --appdir "${APPDIR}" \
             --desktop-file "${APPDIR}/${BIN_NAME}.desktop" \
             --icon-file "${APPDIR}/${BIN_NAME}.png" \
             --output appimage
 
           mkdir -p dist
-          mv ./*.AppImage \
+          mv ./*-x86_64.AppImage \
             "dist/${BIN_NAME}-${GITHUB_REF_NAME}-linux-x86_64.AppImage"
 
       - name: Upload Linux artifact
