@@ -1,22 +1,23 @@
 use crate::app::{ClassAction, ClassKind, SpriteEditorApp};
 use eframe::egui;
 use sprite_editor::scan::{build_headgear_rows, HeadgearRow};
+use sprite_editor::strings;
 
 impl SpriteEditorApp {
     pub(crate) fn draw_headgear_panel(&mut self, ui: &mut egui::Ui) {
         if self.headgear_rx.is_some() {
             ui.horizontal(|ui| {
                 ui.spinner();
-                ui.label("Index headgears…");
+                ui.label(strings::HEADGEAR_INDEXING);
             });
             return;
         }
         let Some(browser) = self.headgear_classes.as_ref() else {
-            ui.label("Aucun headgear.");
+            ui.label(strings::HEADGEAR_NONE);
             return;
         };
         if browser.entries.is_empty() {
-            ui.label("Aucun headgear.");
+            ui.label(strings::HEADGEAR_NONE);
             return;
         }
 
@@ -66,7 +67,11 @@ impl SpriteEditorApp {
                             selected,
                             path,
                         } => {
-                            let gender_label = if *is_male { "Male" } else { "Female" };
+                            let gender_label = if *is_male {
+                                strings::LABEL_MALE
+                            } else {
+                                strings::LABEL_FEMALE
+                            };
                             let g_mark = if *multi {
                                 if *expanded { "- " } else { "+ " }
                             } else {

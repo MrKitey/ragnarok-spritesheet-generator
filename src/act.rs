@@ -4,11 +4,11 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum ActError {
-    #[error("signature invalide (attendu AC)")]
+    #[error("invalid signature (expected AC)")]
     BadSignature,
-    #[error("version ACT non supportée: {0}")]
+    #[error("unsupported ACT version: {0}")]
     UnsupportedVersion(f32),
-    #[error("lecture: {0}")]
+    #[error("read: {0}")]
     Io(#[from] std::io::Error),
 }
 
@@ -46,7 +46,7 @@ pub struct Frame {
 #[derive(Debug, Clone)]
 pub struct Action {
     pub frames: Vec<Frame>,
-    /// Durée d'une frame en millisecondes.
+    /// Frame duration in milliseconds.
     pub frame_ms: f32,
 }
 
@@ -92,7 +92,7 @@ impl ActFile {
             }
             actions.push(Action {
                 frames,
-                frame_ms: 96.0, // 4 ticks * 24 ms par défaut
+                frame_ms: 96.0, // 4 ticks * 24 ms default
             });
         }
 

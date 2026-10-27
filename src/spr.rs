@@ -4,13 +4,13 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum SprError {
-    #[error("signature invalide (attendu SP)")]
+    #[error("invalid signature (expected SP)")]
     BadSignature,
-    #[error("version SPR non supportée: {0}")]
+    #[error("unsupported SPR version: {0}")]
     UnsupportedVersion(f32),
-    #[error("lecture: {0}")]
+    #[error("read: {0}")]
     Io(#[from] std::io::Error),
-    #[error("données RLE invalides")]
+    #[error("invalid RLE data")]
     BadRle,
 }
 

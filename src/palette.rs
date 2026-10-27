@@ -10,7 +10,7 @@ pub struct PaletteEntry {
 
 pub struct PaletteList {
     pub entries: Vec<PaletteEntry>,
-    /// None = palette SPR d'origine.
+    /// None = original SPR palette.
     pub selected: Option<PathBuf>,
 }
 

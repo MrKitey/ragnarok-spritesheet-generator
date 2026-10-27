@@ -6,9 +6,9 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum PalError {
-    #[error("taille invalide: {0} (attendu 1024)")]
+    #[error("invalid size: {0} (expected 1024)")]
     BadSize(usize),
-    #[error("lecture: {0}")]
+    #[error("read: {0}")]
     Io(#[from] std::io::Error),
 }
 

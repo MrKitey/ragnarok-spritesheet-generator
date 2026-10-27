@@ -7,9 +7,9 @@ pub struct RenderedFrame {
     pub width: u32,
     pub height: u32,
     pub pixels: Vec<u8>,
-    /// Ancres dans l'espace image (origine = coin haut-gauche du canvas).
+    /// Anchors in image space (origin = top-left of the canvas).
     pub anchors: Vec<(f32, f32)>,
-    /// Première ancre body (avec delta), espace image. Pour édition drag.
+    /// First body anchor (with delta), image space. Used for drag editing.
     pub body_anchor: Option<(f32, f32)>,
     pub origin_x: f32,
     pub origin_y: f32,
@@ -158,7 +158,7 @@ pub fn build_spritesheet(
 ) -> Result<RenderedFrame, String> {
     let n_actions = base_act.actions.len();
     if n_actions == 0 {
-        return Err("Aucune action a exporter".into());
+        return Err(crate::strings::ERR_NO_ACTION_EXPORT.into());
     }
 
     let max_frames = base_act
@@ -168,7 +168,7 @@ pub fn build_spritesheet(
         .max()
         .unwrap_or(0);
     if max_frames == 0 {
-        return Err("Aucune frame a exporter".into());
+        return Err(crate::strings::ERR_NO_FRAME_EXPORT.into());
     }
 
     let mut rendered: Vec<Vec<Option<RenderedFrame>>> = Vec::with_capacity(n_actions);

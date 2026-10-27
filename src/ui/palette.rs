@@ -1,5 +1,6 @@
 use crate::app::{ClassKind, PaletteAction, SpriteEditorApp};
 use eframe::egui;
+use sprite_editor::strings;
 
 impl SpriteEditorApp {
     pub(crate) fn draw_palette_panel(&mut self, ui: &mut egui::Ui, kind: ClassKind) {
@@ -22,7 +23,7 @@ impl SpriteEditorApp {
 
         let default_selected = list.selected.is_none();
         if ui
-            .add(egui::Button::selectable(default_selected, "Default"))
+            .add(egui::Button::selectable(default_selected, strings::PALETTE_DEFAULT))
             .clicked()
         {
             action = Some(PaletteAction::Reset);
@@ -30,9 +31,9 @@ impl SpriteEditorApp {
 
         if list.entries.is_empty() {
             if self.palette_index_rx.is_some() {
-                ui.label("Index palettes…");
+                ui.label(strings::PALETTE_INDEXING);
             } else {
-                ui.label("Aucune palette.");
+                ui.label(strings::PALETTE_NONE);
             }
         } else {
             egui::ScrollArea::vertical()

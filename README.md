@@ -1,70 +1,71 @@
 # Sprite Editor — Ragnarok ACT/SPR
 
-Éditeur desktop pour composer et exporter des spritesheets Ragnarok Online.
+Desktop editor to compose and export Ragnarok Online spritesheets.
 
-Stack : Rust, eframe/egui, parsers `.spr` / `.act` / `.pal`.
+Stack: Rust, eframe/egui, `.spr` / `.act` / `.pal` parsers.
 
-## Prérequis
+## Requirements
 
-- Rust toolchain récente (edition 2024)
-- Dossier `data/` extrait d’un GRF client RO
+- Recent Rust toolchain (edition 2024)
+- A `data/` folder extracted from a RO client GRF
 
-## Lancer
+## Run
 
 ```bash
 cargo run --release
 ```
 
-Le binaire s’appelle `sprite-editor`.
+Binary name: `ragnarok-spritesheet-generator`.
 
 ## Usage
 
-1. Ouvrir un dossier `data` ou une paire `.spr` / `.act`.
-2. Choisir Body, Head, Weapons, Headgears, palettes.
-3. Prévisualiser actions et frames.
-4. Exporter un spritesheet PNG.
+1. Open a `data` folder or a `.spr` / `.act` pair.
+2. Pick Body, Head, Weapons, Headgears, and palettes.
+3. Preview actions and frames.
+4. Export a PNG spritesheet.
 
-Bouton **Random** : combo body + head aléatoire.
+**Random** picks a random body + head combo.
 
-Onglets latéraux : Dossier, Body, Head, Weapons, Headgears, Body Pal, Head Pal, Sprite.
+Side tabs: Folder, Body, Head, Weapons, Headgears, Body Pal, Head Pal, Sprite.
 
-## Données attendues
+## Expected data layout
 
-Le scanner cherche les chemins coréens et ANSI, par ex. :
+The scanner looks for Korean and ANSI paths, for example:
 
-- Body : `인간족/몸통` ou `ÀÎ°£Á·/¸öÅë`
-- Head : `인간족/머리통`
-- Headgears : `악세사리`
-- Palettes body / head
+- Body: `인간족/몸통` or `ÀÎ°£Á·/¸öÅë`
+- Head: `인간족/머리통`
+- Headgears: `악세사리`
+- Body / head palettes
 
-Voir [folders.md](folders.md) pour le détail des dossiers et classes.
+See [folders.md](folders.md) for folder and class details.
 
-## Structure `src/`
+## `src/` layout
 
-| Module | Rôle |
+| Module | Role |
 |--------|------|
-| `main.rs` | Entrée eframe / wgpu |
-| `app.rs` | État UI et jobs async |
-| `ui/` | Panneaux egui |
-| `spr.rs` / `act.rs` / `pal.rs` | Parsers binaires |
-| `scan.rs` | Parcours dossiers RO |
-| `names.rs` / `jobs.rs` | Noms de classes, jobs UI |
-| `palette.rs` | Index et filtres `.pal` |
-| `compose.rs` | Composition body + attaches |
-| `render.rs` | Rendu frames et spritesheet |
-| `lib.rs` | Crate bibliothèque |
+| `main.rs` | eframe / wgpu entry |
+| `app.rs` | UI state and async jobs |
+| `ui/` | egui panels |
+| `strings.rs` | User-facing English strings |
+| `spr.rs` / `act.rs` / `pal.rs` | Binary parsers |
+| `scan.rs` | RO folder walk |
+| `names.rs` / `jobs.rs` | Class names, UI jobs |
+| `palette.rs` | `.pal` index and filters |
+| `compose.rs` | Body + attach composition |
+| `render.rs` | Frame and spritesheet render |
+| `lib.rs` | Library crate |
 
-## Notes Windows
+## Windows notes
 
-Sous Windows, wgpu privilégie DX12 puis Vulkan.
+On Windows, wgpu prefers DX12, then Vulkan.
 
-Cela évite des plantages Vulkan sur Intel UHD.
+This avoids Vulkan crashes on Intel UHD.
 
-## Notes dépôt
+## Repo notes
 
-- `data/`, `*.grf` et `target/` sont ignorés par git.
-- Les GRF ne doivent pas être versionnés.
+- `data/`, `*.grf`, and `target/` are gitignored.
+- Do not commit GRF files.
 
-## Licence
+## License
 
-Distribué sous [MIT](LICENSE).
+Distributed under [MIT](LICENSE).

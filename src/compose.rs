@@ -38,14 +38,14 @@ pub fn load_pair(path: &Path) -> Result<SpritePair, String> {
     {
         Some("spr") => (path.to_path_buf(), path.with_extension("act")),
         Some("act") => (path.with_extension("spr"), path.to_path_buf()),
-        _ => return Err("Choisissez un fichier .spr ou .act".into()),
+        _ => return Err(crate::strings::ERR_CHOOSE_SPR_ACT.into()),
     };
 
     if !spr_path.exists() {
-        return Err(format!("SPR manquant: {}", spr_path.display()));
+        return Err(crate::strings::missing_spr(spr_path.display()));
     }
     if !act_path.exists() {
-        return Err(format!("ACT manquant: {}", act_path.display()));
+        return Err(crate::strings::missing_act(act_path.display()));
     }
 
     let spr = Arc::new(SprFile::open(&spr_path).map_err(|e| e.to_string())?);
@@ -53,7 +53,7 @@ pub fn load_pair(path: &Path) -> Result<SpritePair, String> {
     let name = spr_path
         .file_stem()
         .map(|s| s.to_string_lossy().into_owned())
-        .unwrap_or_else(|| "sprite".into());
+        .unwrap_or_else(|| crate::strings::FALLBACK_SPRITE_NAME.into());
 
     Ok(SpritePair { name, spr, act })
 }

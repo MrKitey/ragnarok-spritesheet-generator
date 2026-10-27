@@ -1,6 +1,7 @@
 use crate::app::{ClassAction, ClassKind, SpriteEditorApp};
 use eframe::egui;
 use sprite_editor::names::Gender;
+use sprite_editor::strings;
 
 impl SpriteEditorApp {
     pub(crate) fn draw_class_panel(&mut self, ui: &mut egui::Ui, kind: ClassKind) {
@@ -9,12 +10,12 @@ impl SpriteEditorApp {
         };
 
         if kind == ClassKind::Weapon && self.body_sel.is_none() {
-            ui.label("Selectionnez un body.");
+            ui.label(strings::CLASS_SELECT_BODY);
             return;
         }
 
         if browser.entries.is_empty() {
-            ui.label("Aucun sprite.");
+            ui.label(strings::CLASS_NO_SPRITE);
             return;
         }
 
@@ -36,7 +37,7 @@ impl SpriteEditorApp {
                 }
             });
             if !has {
-                ui.label("Aucune arme pour ce body.");
+                ui.label(strings::CLASS_NO_WEAPON);
                 return;
             }
         }
@@ -126,7 +127,11 @@ impl SpriteEditorApp {
                             }
                             continue;
                         }
-                        let gender_label = if is_male { "Male" } else { "Female" };
+                        let gender_label = if is_male {
+                            strings::LABEL_MALE
+                        } else {
+                            strings::LABEL_FEMALE
+                        };
                         let gkey = (entry.stem.clone(), is_male);
                         let multi = variants.len() > 1;
                         let g_expanded = browser.expanded_gender.contains(&gkey);

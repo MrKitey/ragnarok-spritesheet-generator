@@ -4,6 +4,7 @@ mod ui;
 use app::SpriteEditorApp;
 use eframe::egui;
 use eframe::egui_wgpu::{WgpuConfiguration, WgpuSetup, WgpuSetupCreateNew};
+use sprite_editor::strings;
 #[cfg(windows)]
 use eframe::wgpu;
 #[cfg(windows)]
@@ -13,12 +14,12 @@ fn main() -> eframe::Result<()> {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([1100.0, 720.0])
-            .with_title("Sprite Editor - Ragnarok ACT/SPR"),
+            .with_title(strings::WINDOW_TITLE),
         wgpu_options: wgpu_options(),
         ..Default::default()
     };
     eframe::run_native(
-        "Sprite Editor",
+        strings::APP_NAME,
         options,
         Box::new(|_cc| Ok(Box::new(SpriteEditorApp::default()))),
     )
@@ -30,7 +31,7 @@ fn wgpu_options() -> WgpuConfiguration {
 
     #[cfg(windows)]
     {
-        // DX12 d'abord : Vulkan Intel UHD plante souvent (ACCESS_VIOLATION).
+        // Prefer DX12: Vulkan often crashes on Intel UHD (ACCESS_VIOLATION).
         setup.instance_descriptor.backends = wgpu::Backends::DX12 | wgpu::Backends::VULKAN;
         setup.native_adapter_selector = Some(Arc::new(select_windows_adapter));
     }
@@ -69,10 +70,7 @@ fn select_windows_adapter(
         return Ok(adapter);
     }
 
-    Err(format!(
-        "Aucun adaptateur DX12/Vulkan compatible ({} trouve(s))",
-        adapters.len()
-    ))
+    Err(strings::no_dx12_vulkan(adapters.len()))
 }
 
 #[cfg(windows)]

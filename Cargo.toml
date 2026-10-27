@@ -1,6 +1,6 @@
 [package]
 name = "ragnarok-spritesheet-generator"
-version = "0.1.0"
+version = "0.1.5"
 edition = "2024"
 
 [lib]
@@ -19,7 +19,7 @@ rand = "0.10.3"
 rfd = "0.17.2"
 thiserror = "2"
 
-# Garantit DX12 + Vulkan compiles sous Windows (fallback runtime).
+# Ensure DX12 + Vulkan compile on Windows (runtime fallback).
 [dev-dependencies]
 tempfile = "3"
 

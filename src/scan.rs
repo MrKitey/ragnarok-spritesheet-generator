@@ -342,7 +342,7 @@ pub fn scan_weapon_dir(root: &Path) -> Result<ClassBrowser, String> {
     }
     let browser = entries_from_map(map);
     if browser.entries.is_empty() {
-        return Err("Aucune arme".into());
+        return Err(crate::strings::ERR_NO_WEAPON.into());
     }
     Ok(browser)
 }
@@ -357,7 +357,7 @@ pub fn scan_headgear_dir(root: &Path) -> Result<ClassBrowser, String> {
     }
     let browser = entries_from_map(map);
     if browser.entries.is_empty() {
-        return Err("Aucun headgear".into());
+        return Err(crate::strings::ERR_NO_HEADGEAR.into());
     }
     Ok(browser)
 }
@@ -434,7 +434,7 @@ fn collect_headgear_variants(
             continue;
         }
         let variant = SpriteVariant {
-            label: "default".into(),
+            label: crate::strings::VARIANT_DEFAULT.into(),
             path,
         };
         let slot = map.entry(item.to_string()).or_default();
@@ -510,7 +510,7 @@ fn variant_label(stem: &str, class_key: &str) -> String {
         || stem == format!("{class_key}_남")
         || stem == format!("{class_key}_여")
     {
-        return "default".into();
+        return crate::strings::VARIANT_DEFAULT.into();
     }
     stem.to_string()
 }

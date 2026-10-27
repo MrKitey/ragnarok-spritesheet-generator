@@ -1,10 +1,11 @@
 use crate::app::{FolderAction, SpriteEditorApp};
 use eframe::egui;
+use sprite_editor::strings;
 
 impl SpriteEditorApp {
     pub(crate) fn draw_folder_panel(&mut self, ui: &mut egui::Ui) {
         if self.folder.is_none() {
-            ui.label("Aucun dossier ouvert.");
+            ui.label(strings::FOLDER_NONE);
             return;
         }
 
@@ -15,7 +16,7 @@ impl SpriteEditorApp {
             ui.separator();
 
             if folder.rows.is_empty() {
-                ui.label("Dossier vide.");
+                ui.label(strings::FOLDER_EMPTY);
                 return;
             }
 

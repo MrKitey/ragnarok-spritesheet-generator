@@ -1,19 +1,20 @@
 use crate::app::{ClassKind, SideTab, SpriteEditorApp};
 use eframe::egui;
+use sprite_editor::strings;
 
 impl SpriteEditorApp {
     pub(crate) fn draw_side_tabs(&mut self, ui: &mut egui::Ui) {
         self.ensure_side_tab();
 
         let tabs: &[(SideTab, &str)] = &[
-            (SideTab::Folder, "Dossier"),
-            (SideTab::Body, "Body"),
-            (SideTab::Head, "Head"),
-            (SideTab::Weapons, "Weapons"),
-            (SideTab::Headgears, "Headgears"),
-            (SideTab::BodyPal, "Body Pal"),
-            (SideTab::HeadPal, "Head Pal"),
-            (SideTab::Sprite, "Sprite"),
+            (SideTab::Folder, strings::TAB_FOLDER),
+            (SideTab::Body, strings::TAB_BODY),
+            (SideTab::Head, strings::TAB_HEAD),
+            (SideTab::Weapons, strings::TAB_WEAPONS),
+            (SideTab::Headgears, strings::TAB_HEADGEARS),
+            (SideTab::BodyPal, strings::TAB_BODY_PAL),
+            (SideTab::HeadPal, strings::TAB_HEAD_PAL),
+            (SideTab::Sprite, strings::TAB_SPRITE),
         ];
 
         ui.horizontal_wrapped(|ui| {

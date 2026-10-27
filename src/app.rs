@@ -16,6 +16,7 @@ use sprite_editor::scan::{
     scan_headgear_dir, scan_weapon_dir, ClassBrowser, FolderBrowser, BODY_PALETTE_SEGMENTS,
     BODY_SEGMENTS, HEADGEAR_SEGMENTS, HEAD_PALETTE_SEGMENTS, HEAD_SEGMENTS, WEAPON_ROOT_SEGMENTS,
 };
+use sprite_editor::strings;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::mpsc::{self, Receiver};
@@ -115,7 +116,7 @@ impl Default for SpriteEditorApp {
             show_anchors: false,
             show_origin: false,
             show_checker: true,
-            status: "Ouvrir une paire .spr / .act ou un dossier".into(),
+            status: strings::STATUS_OPEN_HINT.into(),
             texture: None,
             texture_key: String::new(),
             busy: None,
@@ -147,17 +148,17 @@ impl eframe::App for SpriteEditorApp {
         egui::Panel::top("top").show(ui, |ui| {
             ui.add_enabled_ui(!busy, |ui| {
                 ui.horizontal(|ui| {
-                    if ui.button("Ouvrir dossier…").clicked() {
+                    if ui.button(strings::BTN_OPEN_FOLDER).clicked() {
                         self.open_folder();
                     }
-                    if self.data_ready() && ui.button("Random").clicked() {
+                    if self.data_ready() && ui.button(strings::BTN_RANDOM).clicked() {
                         self.load_random();
                     }
                     ui.separator();
-                    ui.checkbox(&mut self.show_anchors, "Ancrages");
-                    ui.checkbox(&mut self.show_origin, "Origine");
-                    ui.checkbox(&mut self.show_checker, "Quadrillage");
-                    ui.add(egui::Slider::new(&mut self.zoom, 0.5..=8.0).text("Zoom"));
+                    ui.checkbox(&mut self.show_anchors, strings::CHK_ANCHORS);
+                    ui.checkbox(&mut self.show_origin, strings::CHK_ORIGIN);
+                    ui.checkbox(&mut self.show_checker, strings::CHK_CHECKER);
+                    ui.add(egui::Slider::new(&mut self.zoom, 0.5..=8.0).text(strings::SLIDER_ZOOM));
                 });
             });
             ui.label(&self.status);
@@ -279,13 +280,13 @@ impl SpriteEditorApp {
             return;
         }
         let Some(base) = &self.base else {
-            self.status = "Aucun sprite a exporter".into();
+            self.status = strings::STATUS_NO_EXPORT.into();
             return;
         };
 
         let default_name = format!("{}_sheet.png", base.name);
         let Some(path) = rfd::FileDialog::new()
-            .add_filter("PNG", &["png"])
+            .add_filter(strings::FILTER_PNG, &["png"])
             .set_file_name(&default_name)
             .save_file()
         else {
@@ -308,7 +309,7 @@ impl SpriteEditorApp {
             extras_owned.push((Arc::clone(&h.spr), Arc::clone(&h.act), AttachMode::Anchor));
         }
 
-        let (job, tx) = BusyJob::start("Export spritesheet…");
+        let (job, tx) = BusyJob::start(strings::JOB_EXPORT_SHEET);
         self.status = job.label.clone();
         self.busy = Some(job);
 
@@ -324,14 +325,13 @@ impl SpriteEditorApp {
                 let width = sheet.width;
                 let height = sheet.height;
                 let img = image::RgbaImage::from_raw(width, height, sheet.pixels)
-                    .ok_or_else(|| "buffer invalide".to_string())?;
+                    .ok_or_else(|| strings::ERR_INVALID_BUFFER.to_string())?;
                 img.save(&path).map_err(|e| e.to_string())?;
-                Ok(format!(
-                    "Export: {} ({}x{}, {} actions)",
+                Ok(strings::status_export_ok(
                     path.display(),
                     width,
                     height,
-                    n_actions
+                    n_actions,
                 ))
             })();
             let _ = tx.send(JobResult::Export(result));
@@ -362,25 +362,25 @@ impl SpriteEditorApp {
         match polled {
             Some(Ok(JobResult::Random(result))) => match result {
                 Ok(ready) => self.apply_random_result(ready),
-                Err(e) => self.status = format!("Random: {e}"),
+                Err(e) => self.status = strings::status_random_err(e),
             },
             Some(Ok(JobResult::Export(result))) => match result {
                 Ok(msg) => self.status = msg,
-                Err(e) => self.status = format!("Export: {e}"),
+                Err(e) => self.status = strings::status_export_err(e),
             },
             Some(Ok(JobResult::LoadHeadgear { path, result })) => match result {
                 Ok(pair) => {
                     if let Some(b) = &mut self.headgear_classes {
                         b.selected = Some(path);
                     }
-                    self.status = format!("Headgear: {}", pair.name);
+                    self.status = strings::status_headgear(&pair.name);
                     self.headgear = Some(pair);
                     self.texture_key.clear();
                 }
-                Err(e) => self.status = format!("Erreur headgear: {e}"),
+                Err(e) => self.status = strings::status_headgear_err(e),
             },
             Some(Err(())) => {
-                self.status = "Tache interrompue".into();
+                self.status = strings::STATUS_JOB_INTERRUPTED.into();
             }
             None => {}
         }
@@ -422,7 +422,7 @@ impl SpriteEditorApp {
             "-".into()
         };
 
-        self.status = format!("Random: {body_name} + {head_name}");
+        self.status = strings::status_random_ok(&body_name, &head_name);
         self.side_tab = SideTab::Sprite;
     }
 
@@ -456,7 +456,7 @@ impl SpriteEditorApp {
         match FolderBrowser::open(path.clone()) {
             Ok(browser) => {
                 let name = browser.root.display().to_string();
-                self.status = format!("Dossier: {name}");
+                self.status = strings::status_folder(&name);
                 self.folder = Some(browser);
                 self.body_classes = find_class_dir(&path, BODY_SEGMENTS)
                     .and_then(|p| scan_class_dir(&p).ok());
@@ -478,7 +478,7 @@ impl SpriteEditorApp {
                 self.start_headgear_index();
             }
             Err(e) => {
-                self.status = format!("Erreur dossier: {e}");
+                self.status = strings::status_folder_err(e);
                 self.body_classes = None;
                 self.head_classes = None;
                 self.weapon_classes = None;
@@ -521,7 +521,7 @@ impl SpriteEditorApp {
             Ok(Err(e)) => {
                 self.headgear_rx = None;
                 self.headgear_classes = None;
-                self.status = format!("Headgears: {e}");
+                self.status = strings::status_headgears_err(e);
             }
             Err(mpsc::TryRecvError::Empty) => {}
             Err(mpsc::TryRecvError::Disconnected) => {
@@ -555,8 +555,9 @@ impl SpriteEditorApp {
                 self.palette_index = Some(index);
                 self.refresh_body_palettes();
                 self.refresh_head_palettes();
-                if self.status.starts_with("Dossier:") {
-                    self.status = format!("{} (palettes pretes)", self.status);
+                if self.status.starts_with(strings::STATUS_FOLDER_PREFIX) {
+                    let next = strings::status_palettes_ready(&self.status);
+                    self.status = next;
                 }
             }
             Err(mpsc::TryRecvError::Empty) => {}
@@ -603,13 +604,13 @@ impl SpriteEditorApp {
                 let name = path
                     .file_stem()
                     .map(|s| s.to_string_lossy().into_owned())
-                    .unwrap_or_else(|| "palette".into());
+                    .unwrap_or_else(|| strings::FALLBACK_PALETTE_NAME.into());
                 match kind {
                     ClassKind::Body => {
                         if let Some(base) = &mut self.base {
                             Arc::make_mut(&mut base.spr).apply_palette(palette);
                             self.body_palettes.selected = Some(path.to_path_buf());
-                            self.status = format!("Palette body: {name}");
+                            self.status = strings::status_palette_body(&name);
                             self.texture_key.clear();
                         }
                     }
@@ -617,14 +618,14 @@ impl SpriteEditorApp {
                         if let Some(attach) = &mut self.attach {
                             Arc::make_mut(&mut attach.spr).apply_palette(palette);
                             self.head_palettes.selected = Some(path.to_path_buf());
-                            self.status = format!("Palette head: {name}");
+                            self.status = strings::status_palette_head(&name);
                             self.texture_key.clear();
                         }
                     }
                     ClassKind::Weapon | ClassKind::Headgear => {}
                 }
             }
-            Err(e) => self.status = format!("Erreur palette: {e}"),
+            Err(e) => self.status = strings::status_palette_err(e),
         }
     }
 
@@ -634,7 +635,7 @@ impl SpriteEditorApp {
                 if let Some(base) = &mut self.base {
                     Arc::make_mut(&mut base.spr).reset_palette();
                     self.body_palettes.selected = None;
-                    self.status = "Palette body: Default".into();
+                    self.status = strings::STATUS_PALETTE_BODY_DEFAULT.into();
                     self.texture_key.clear();
                 }
             }
@@ -642,7 +643,7 @@ impl SpriteEditorApp {
                 if let Some(attach) = &mut self.attach {
                     Arc::make_mut(&mut attach.spr).reset_palette();
                     self.head_palettes.selected = None;
-                    self.status = "Palette head: Default".into();
+                    self.status = strings::STATUS_PALETTE_HEAD_DEFAULT.into();
                     self.texture_key.clear();
                 }
             }
@@ -728,7 +729,7 @@ impl SpriteEditorApp {
         match load_pair(path) {
             Ok(pair) => {
                 self.body_sel = sprite_sel_from_name(&pair.name);
-                self.status = format!("Body: {}", pair.name);
+                self.status = strings::status_body(&pair.name);
                 self.base = Some(pair);
                 self.action_idx = 0;
                 self.frame_idx = 0;
@@ -741,7 +742,7 @@ impl SpriteEditorApp {
                 // Drop weapon if it no longer matches the new body class/gender.
                 self.clear_weapon_if_mismatch();
             }
-            Err(e) => self.status = format!("Erreur body: {e}"),
+            Err(e) => self.status = strings::status_body_err(e),
         }
     }
 
@@ -773,12 +774,12 @@ impl SpriteEditorApp {
         match load_pair(path) {
             Ok(pair) => {
                 self.head_sel = sprite_sel_from_name(&pair.name);
-                self.status = format!("Head: {}", pair.name);
+                self.status = strings::status_head(&pair.name);
                 self.attach = Some(pair);
                 self.texture_key.clear();
                 self.refresh_head_palettes();
             }
-            Err(e) => self.status = format!("Erreur head: {e}"),
+            Err(e) => self.status = strings::status_head_err(e),
         }
     }
 
@@ -787,16 +788,16 @@ impl SpriteEditorApp {
             b.selected = Some(path.to_path_buf());
         }
         if self.base.is_none() {
-            self.status = "Chargez un body avant l'arme".into();
+            self.status = strings::STATUS_LOAD_BODY_BEFORE_WEAPON.into();
             return;
         }
         match load_pair(path) {
             Ok(pair) => {
-                self.status = format!("Weapon: {}", pair.name);
+                self.status = strings::status_weapon(&pair.name);
                 self.weapon = Some(pair);
                 self.texture_key.clear();
             }
-            Err(e) => self.status = format!("Erreur weapon: {e}"),
+            Err(e) => self.status = strings::status_weapon_err(e),
         }
     }
 
@@ -805,10 +806,10 @@ impl SpriteEditorApp {
             b.selected = Some(path.to_path_buf());
         }
         if self.base.is_none() {
-            self.status = "Chargez un body avant le headgear".into();
+            self.status = strings::STATUS_LOAD_BODY_BEFORE_HEADGEAR.into();
             return;
         }
-        let Some(tx) = self.start_job("Chargement headgear…") else {
+        let Some(tx) = self.start_job(strings::JOB_LOAD_HEADGEAR) else {
             return;
         };
         let path = path.to_path_buf();
@@ -823,7 +824,7 @@ impl SpriteEditorApp {
             return;
         };
         if let Err(e) = folder.toggle(path) {
-            self.status = format!("Erreur dossier: {e}");
+            self.status = strings::status_folder_err(e);
         }
     }
 
@@ -840,7 +841,7 @@ impl SpriteEditorApp {
             Some("spr") | Some("act") => match load_pair(path) {
                 Ok(pair) => {
                     self.body_sel = sprite_sel_from_name(&pair.name);
-                    self.status = format!("Charge: {}", pair.name);
+                    self.status = strings::status_loaded(&pair.name);
                     self.base = Some(pair);
                     self.action_idx = 0;
                     self.frame_idx = 0;
@@ -851,10 +852,10 @@ impl SpriteEditorApp {
                     self.last_tick = Instant::now();
                     self.refresh_body_palettes();
                 }
-                Err(e) => self.status = format!("Erreur: {e}"),
+                Err(e) => self.status = strings::status_err(e),
             },
             _ => {
-                self.status = format!("Fichier: {}", path.display());
+                self.status = strings::status_file(path.display());
             }
         }
     }
@@ -864,7 +865,7 @@ impl SpriteEditorApp {
     }
 
     pub(crate) fn load_random(&mut self) {
-        let Some(tx) = self.start_job("Random…") else {
+        let Some(tx) = self.start_job(strings::JOB_RANDOM) else {
             return;
         };
 
@@ -898,7 +899,7 @@ impl SpriteEditorApp {
         let body_path = pick_random_path(&body_paths, cur_body.as_deref(), &mut rng);
         let Some(body_path) = body_path else {
             self.busy = None;
-            self.status = "Random: aucun body".into();
+            self.status = strings::STATUS_RANDOM_NO_BODY.into();
             return;
         };
 

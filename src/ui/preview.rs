@@ -5,7 +5,7 @@ impl SpriteEditorApp {
     pub(crate) fn draw_preview(&mut self, ui: &mut egui::Ui) {
         let Some(rendered) = self.current_render() else {
             ui.centered_and_justified(|ui| {
-                ui.label("Chargez une paire .spr/.act pour previsualiser.");
+                ui.label(sprite_editor::strings::PREVIEW_EMPTY);
             });
             return;
         };

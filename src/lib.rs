@@ -7,6 +7,7 @@ pub mod palette;
 pub mod render;
 pub mod scan;
 pub mod spr;
+pub mod strings;
 
 #[cfg(test)]
 pub mod fixtures;
