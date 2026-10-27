@@ -1,0 +1,27 @@
+[package]
+name = "sprite-editor"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "sprite_editor"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sprite-editor"
+path = "src/main.rs"
+
+[dependencies]
+byteorder = "1.5.0"
+eframe = "0.37.0"
+image = { version = "0.25.10", default-features = false, features = ["png"] }
+rand = "0.10.3"
+rfd = "0.17.2"
+thiserror = "2"
+
+# Garantit DX12 + Vulkan compiles sous Windows (fallback runtime).
+[dev-dependencies]
+tempfile = "3"
+
+[target.'cfg(windows)'.dependencies]
+wgpu = { version = "30.0", default-features = false, features = ["dx12", "vulkan", "wgsl"] }
