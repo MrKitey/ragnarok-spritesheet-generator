@@ -154,6 +154,12 @@ impl eframe::App for SpriteEditorApp {
                     if self.data_ready() && ui.button(strings::BTN_RANDOM).clicked() {
                         self.load_random();
                     }
+                    if ui
+                        .add_enabled(self.has_selection(), egui::Button::new(strings::BTN_RESET_ALL))
+                        .clicked()
+                    {
+                        self.reset_selection();
+                    }
                     ui.separator();
                     ui.checkbox(&mut self.show_anchors, strings::CHK_ANCHORS);
                     ui.checkbox(&mut self.show_origin, strings::CHK_ORIGIN);
@@ -817,6 +823,84 @@ impl SpriteEditorApp {
             let result = load_pair(&path);
             let _ = tx.send(JobResult::LoadHeadgear { path, result });
         });
+    }
+
+    /// True when `path` is the current selection of the `kind` browser.
+    pub(crate) fn is_class_selected(&self, kind: ClassKind, path: &Path) -> bool {
+        self.class_browser(kind)
+            .and_then(|b| b.selected.as_deref())
+            .is_some_and(|p| p == path)
+    }
+
+    pub(crate) fn unload_class_sprite(&mut self, kind: ClassKind) {
+        if let Some(b) = self.class_browser_mut(kind) {
+            b.selected = None;
+        }
+        match kind {
+            ClassKind::Body => {
+                self.clear_body();
+                // Weapons are filtered by body class/gender.
+                self.clear_weapon();
+                self.status = strings::STATUS_BODY_CLEARED.into();
+            }
+            ClassKind::Head => {
+                self.attach = None;
+                self.head_sel = None;
+                self.head_palettes = PaletteList::default();
+                self.status = strings::STATUS_HEAD_CLEARED.into();
+            }
+            ClassKind::Weapon => {
+                self.clear_weapon();
+                self.status = strings::STATUS_WEAPON_CLEARED.into();
+            }
+            ClassKind::Headgear => {
+                self.headgear = None;
+                self.status = strings::STATUS_HEADGEAR_CLEARED.into();
+            }
+        }
+        self.texture_key.clear();
+    }
+
+    fn clear_body(&mut self) {
+        self.base = None;
+        self.body_sel = None;
+        self.body_palettes = PaletteList::default();
+        self.action_idx = 0;
+        self.frame_idx = 0;
+        self.playing = false;
+        self.anchor_offsets.clear();
+        self.dragging_anchor = false;
+        if let Some(folder) = &mut self.folder {
+            folder.selected = None;
+        }
+    }
+
+    fn clear_weapon(&mut self) {
+        self.weapon = None;
+        if let Some(b) = &mut self.weapon_classes {
+            b.selected = None;
+        }
+    }
+
+    pub(crate) fn has_selection(&self) -> bool {
+        self.base.is_some()
+            || self.attach.is_some()
+            || self.weapon.is_some()
+            || self.headgear.is_some()
+    }
+
+    /// Drop every loaded sprite and palette; keeps the open folder and indexes.
+    pub(crate) fn reset_selection(&mut self) {
+        for kind in [
+            ClassKind::Body,
+            ClassKind::Head,
+            ClassKind::Weapon,
+            ClassKind::Headgear,
+        ] {
+            self.unload_class_sprite(kind);
+        }
+        self.texture = None;
+        self.status = strings::STATUS_RESET.into();
     }
 
     pub(crate) fn toggle_dir(&mut self, path: &Path) {

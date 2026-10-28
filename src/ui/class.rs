@@ -221,6 +221,10 @@ impl SpriteEditorApp {
                     }
                 }
             }
+            // Clicking the current selection again deselects it.
+            Some(ClassAction::Open(path)) if self.is_class_selected(kind, &path) => {
+                self.unload_class_sprite(kind)
+            }
             Some(ClassAction::Open(path)) => self.open_class_sprite(kind, &path),
             Some(ClassAction::Navigate(delta)) => self.navigate_class_sprites(kind, delta),
             None => {}

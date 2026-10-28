@@ -140,6 +140,10 @@ impl SpriteEditorApp {
                     }
                 }
             }
+            // Clicking the current selection again deselects it.
+            Some(ClassAction::Open(path)) if self.is_class_selected(ClassKind::Headgear, &path) => {
+                self.unload_class_sprite(ClassKind::Headgear)
+            }
             Some(ClassAction::Open(path)) => self.load_headgear_sprite(&path),
             Some(ClassAction::Navigate(delta)) => {
                 self.navigate_class_sprites(ClassKind::Headgear, delta)

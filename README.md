@@ -29,6 +29,8 @@ Binary name: `ragnarok-spritesheet-generator`.
 
 **Random** picks a random body + head combo.
 
+**Reset** clears every selected sprite and palette. Clicking a selected Body, Head, Weapon, or Headgear again deselects it.
+
 Side tabs: Folder, Body, Head, Weapons, Headgears, Body Pal, Head Pal, Sprite.
 
 ## Expected data layout
